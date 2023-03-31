@@ -35,13 +35,13 @@ namespace ChikoRokoBot.Sorter
                 var tableEntityResponse = await _tableClient.GetEntityIfExistsAsync<DropTableEntity>(PARTITION_NAME, drop.Id?.ToString());
                 if (tableEntityResponse.HasValue) continue;
 
-                await _queueClient.SendMessageAsync(JsonSerializer.Serialize(drop));
-
                 var tableEntity = _mapper.Map<DropTableEntity>(drop);
                 tableEntity.PartitionKey = PARTITION_NAME;
                 tableEntity.RowKey = drop.Id?.ToString();
 
                 await _tableClient.AddEntityAsync(tableEntity);
+
+                await _queueClient.SendMessageAsync(JsonSerializer.Serialize(drop));                
             }
         }
     }
