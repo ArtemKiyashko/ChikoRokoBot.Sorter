@@ -30,7 +30,7 @@ namespace ChikoRokoBot.Sorter
                 clientBuilder.UseCredential(new DefaultAzureCredential());
                 clientBuilder
                     .AddQueueServiceClient(_sorterOptions.StorageAccount)
-                    .ConfigureOptions((options) => { options.MessageEncoding = QueueMessageEncoding.Base64; }); ;
+                    .ConfigureOptions((options) => { options.MessageEncoding = QueueMessageEncoding.Base64; });
                 clientBuilder.AddTableServiceClient(_sorterOptions.StorageAccount);
             });
 
