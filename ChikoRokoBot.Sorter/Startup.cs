@@ -41,13 +41,6 @@ namespace ChikoRokoBot.Sorter
                 return client;
             });
 
-            builder.Services.AddScoped<TableClient>((factory) => {
-                var service = factory.GetRequiredService<TableServiceClient>();
-                var client = service.GetTableClient(_sorterOptions.DropsTableName);
-                client.CreateIfNotExists();
-                return client;
-            });
-
             builder.Services.AddAutoMapper(typeof(PrimaryMapperProfile));
         }
     }

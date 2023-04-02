@@ -6,6 +6,7 @@ namespace ChikoRokoBot.Sorter.Options
 		public string NotificationQueueName { get; set; } = "notifydrops";
         public string StorageAccount { get; set; } = "UseDevelopmentStorage=true";
         public string DropsTableName { get; set; } = "drops";
+        public string UsersTableName { get; set; } = "users";
     }
 }
 
