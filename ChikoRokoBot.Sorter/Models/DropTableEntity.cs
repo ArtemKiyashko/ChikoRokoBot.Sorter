@@ -16,6 +16,7 @@ namespace ChikoRokoBot.Sorter.Models
         public DateTime Finish { get; set; }
         public DateTime Start { get; set; }
         public int? Toyid { get; set; }
+        public int? BlindBoxId { get; set; }
         public string Mechanic { get; set; }
         public string Slug { get; set; }
         public RarityTypes RarityType { get; set; }
