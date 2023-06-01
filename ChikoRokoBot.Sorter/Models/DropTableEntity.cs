@@ -19,7 +19,7 @@ namespace ChikoRokoBot.Sorter.Models
         public int? BlindBoxId { get; set; }
         public string Mechanic { get; set; }
         public string Slug { get; set; }
-        public RarityTypes RarityType { get; set; }
+        public RarityTypes? RarityType { get; set; }
         public string DropJson { get; set; }
     }
 }
