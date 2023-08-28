@@ -16,7 +16,6 @@ namespace ChikoRokoBot.Sorter
     public class Sorter
     {
         private readonly QueueClient _queueClient;
-        private readonly TableServiceClient _tableServiceClient;
         private readonly TableClient _dropTable;
         private readonly TableClient _userTable;
         private readonly IMapper _mapper;
@@ -30,7 +29,6 @@ namespace ChikoRokoBot.Sorter
             IOptions<SorterOptions> options)
         {
             _queueClient = queueClient;
-            _tableServiceClient = tableServiceClient;
             _dropTable = tableServiceClient.GetTableClient(options.Value.DropsTableName);
             _dropTable.CreateIfNotExists();
             _userTable = tableServiceClient.GetTableClient(options.Value.UsersTableName);
