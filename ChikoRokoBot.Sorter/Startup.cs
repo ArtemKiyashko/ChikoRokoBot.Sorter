@@ -1,7 +1,8 @@
-﻿using System;
-using Azure.Data.Tables;
+﻿using System.Net;
+using System.Net.Http;
 using Azure.Identity;
 using Azure.Storage.Queues;
+using ChikoRokoBot.Sorter.Clients;
 using ChikoRokoBot.Sorter.Mappers;
 using ChikoRokoBot.Sorter.Options;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -42,6 +43,23 @@ namespace ChikoRokoBot.Sorter
             });
 
             builder.Services.AddAutoMapper(typeof(PrimaryMapperProfile));
+
+
+
+            builder.Services
+                .AddHttpClient<ChikoRokoClient>(client => client.BaseAddress = _sorterOptions.ChikoRokoBaseAddress)
+                .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                var messageHandler = new HttpClientHandler();
+                var cookieContainer = new CookieContainer();
+
+                cookieContainer.Add(_sorterOptions.ChikoRokoBaseAddress, new Cookie("sessionid", _sorterOptions.ChikoRokoSessionId));
+
+                messageHandler.CookieContainer = cookieContainer;
+                messageHandler.UseCookies = true;
+
+                return messageHandler;
+            });
         }
     }
 }

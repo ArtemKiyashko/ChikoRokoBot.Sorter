@@ -5,6 +5,7 @@ using AutoMapper;
 using Azure;
 using Azure.Data.Tables;
 using Azure.Storage.Queues;
+using ChikoRokoBot.Sorter.Clients;
 using ChikoRokoBot.Sorter.Models;
 using ChikoRokoBot.Sorter.Options;
 using Microsoft.Azure.WebJobs;
@@ -19,6 +20,7 @@ namespace ChikoRokoBot.Sorter
         private readonly TableClient _dropTable;
         private readonly TableClient _userTable;
         private readonly IMapper _mapper;
+        private readonly ChikoRokoClient _chikoRokoClient;
         private const string PARTITION_NAME = "primary";
         private ILogger _logger;
 
@@ -26,7 +28,8 @@ namespace ChikoRokoBot.Sorter
             QueueClient queueClient,
             TableServiceClient tableServiceClient,
             IMapper mapper,
-            IOptions<SorterOptions> options)
+            IOptions<SorterOptions> options,
+            ChikoRokoClient chikoRokoClient)
         {
             _queueClient = queueClient;
             _dropTable = tableServiceClient.GetTableClient(options.Value.DropsTableName);
@@ -34,6 +37,7 @@ namespace ChikoRokoBot.Sorter
             _userTable = tableServiceClient.GetTableClient(options.Value.UsersTableName);
             _userTable.CreateIfNotExists();
             _mapper = mapper;
+            _chikoRokoClient = chikoRokoClient;
         }
 
         [FunctionName("Sorter")]
@@ -53,6 +57,12 @@ namespace ChikoRokoBot.Sorter
                 var tableEntity = _mapper.Map<DropTableEntity>(drop);
                 tableEntity.PartitionKey = PARTITION_NAME;
                 tableEntity.RowKey = drop.Id?.ToString();
+
+                if (tableEntity.Toyid.HasValue)
+                {
+                    tableEntity.ModelUrlNoExtension = await _chikoRokoClient.GetModelLink(tableEntity.Toyid.Value);
+                    drop.Toy.ModelUrlNoExtension = tableEntity.ModelUrlNoExtension;
+                }
 
                 await _dropTable.AddEntityAsync(tableEntity);
                 await SendToAllUsers(users, drop);

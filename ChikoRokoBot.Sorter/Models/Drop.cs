@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Azure;
-using Azure.Data.Tables;
 
 namespace ChikoRokoBot.Sorter.Models
 {
