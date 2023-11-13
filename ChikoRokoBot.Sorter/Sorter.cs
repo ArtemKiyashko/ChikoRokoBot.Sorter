@@ -54,26 +54,32 @@ namespace ChikoRokoBot.Sorter
                 var tableEntityResponse = await _dropTable.GetEntityIfExistsAsync<DropTableEntity>(PARTITION_NAME, drop.Id?.ToString());
                 if (tableEntityResponse.HasValue) continue;
 
-                var tableEntity = _mapper.Map<DropTableEntity>(drop);
-                tableEntity.PartitionKey = PARTITION_NAME;
-                tableEntity.RowKey = drop.Id?.ToString();
-                await SetModelUrls(drop, tableEntity);
+                var tableEntity = await CreateTableEntity(drop);
+
+                if (drop.Toy is not null)
+                {
+                    drop.Toy.ModelUrlUsdz = tableEntity.ModelUrlUsdz;
+                    drop.Toy.ModelUrlGlb = tableEntity.ModelUrlGlb;
+                }
 
                 await _dropTable.AddEntityAsync(tableEntity);
                 await SendToAllUsers(users, drop);
             }
         }
 
-        private async Task SetModelUrls(Drop drop, DropTableEntity tableEntity)
+        private async Task<DropTableEntity> CreateTableEntity(Drop drop)
         {
+            var tableEntity = _mapper.Map<DropTableEntity>(drop);
+            tableEntity.PartitionKey = PARTITION_NAME;
+            tableEntity.RowKey = drop.Id?.ToString();
+
             if (tableEntity.Toyid.HasValue)
             {
                 var modelUrls = await _chikoRokoClient.GetModelUrls(tableEntity.Toyid.Value);
                 tableEntity.ModelUrlUsdz = modelUrls.ContainsKey(ModelUrlType.usdz) ? modelUrls[ModelUrlType.usdz] : default;
                 tableEntity.ModelUrlGlb = modelUrls.ContainsKey(ModelUrlType.glb) ? modelUrls[ModelUrlType.glb] : default;
-                drop.Toy.ModelUrlUsdz = tableEntity.ModelUrlUsdz;
-                drop.Toy.ModelUrlGlb = tableEntity.ModelUrlGlb;
             }
+            return tableEntity;
         }
 
         private async Task SendToAllUsers(AsyncPageable<UserTableEntity> users, Drop drop)
