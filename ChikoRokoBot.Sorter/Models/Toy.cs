@@ -31,7 +31,8 @@ namespace ChikoRokoBot.Sorter.Models
         [property: JsonPropertyName("stores")] IReadOnlyList<Store> Stores
     )
     {
-        public string ModelUrlNoExtension { get; set; }
+        public string ModelUrlUsdz { get; set; }
+        public string ModelUrlGlb { get; set; }
     }
 }
 

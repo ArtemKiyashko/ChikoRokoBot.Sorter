@@ -57,15 +57,22 @@ namespace ChikoRokoBot.Sorter
                 var tableEntity = _mapper.Map<DropTableEntity>(drop);
                 tableEntity.PartitionKey = PARTITION_NAME;
                 tableEntity.RowKey = drop.Id?.ToString();
-
-                if (tableEntity.Toyid.HasValue)
-                {
-                    tableEntity.ModelUrlNoExtension = await _chikoRokoClient.GetModelLink(tableEntity.Toyid.Value);
-                    drop.Toy.ModelUrlNoExtension = tableEntity.ModelUrlNoExtension;
-                }
+                await SetModelUrls(drop, tableEntity);
 
                 await _dropTable.AddEntityAsync(tableEntity);
                 await SendToAllUsers(users, drop);
+            }
+        }
+
+        private async Task SetModelUrls(Drop drop, DropTableEntity tableEntity)
+        {
+            if (tableEntity.Toyid.HasValue)
+            {
+                var modelUrls = await _chikoRokoClient.GetModelUrls(tableEntity.Toyid.Value);
+                tableEntity.ModelUrlUsdz = modelUrls.ContainsKey(ModelUrlType.usdz) ? modelUrls[ModelUrlType.usdz] : default;
+                tableEntity.ModelUrlGlb = modelUrls.ContainsKey(ModelUrlType.glb) ? modelUrls[ModelUrlType.glb] : default;
+                drop.Toy.ModelUrlUsdz = tableEntity.ModelUrlUsdz;
+                drop.Toy.ModelUrlGlb = tableEntity.ModelUrlGlb;
             }
         }
 

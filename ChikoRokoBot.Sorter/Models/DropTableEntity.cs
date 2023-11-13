@@ -21,7 +21,8 @@ namespace ChikoRokoBot.Sorter.Models
         public string Slug { get; set; }
         public RarityTypes? RarityType { get; set; }
         public string DropJson { get; set; }
-        public string ModelUrlNoExtension { get; set; }
+        public string ModelUrlUsdz { get; set; }
+        public string ModelUrlGlb { get; set; }
     }
 }
 

@@ -19,8 +19,9 @@ namespace ChikoRokoBot.Sorter.Clients
             _logger = logger;
         }
 
-        public async Task<string> GetModelLink(int toyId)
+        public async Task<IDictionary<ModelUrlType, string>> GetModelUrls(int toyId)
         {
+            var result = new Dictionary<ModelUrlType, string>();
             var request = new RequestValue(new RequestParameter(toyId));
             var dictionaryRequest = new Dictionary<int, RequestValue>
             {
@@ -33,9 +34,18 @@ namespace ChikoRokoBot.Sorter.Clients
                 var response = await _httpClient.GetStringAsync($"api/v2/ToyManager.getModel?batch=1&input={json}");
                 var responseObject = JsonSerializer.Deserialize<List<GetToyModelResponse>>(response);
 
-                return string.IsNullOrEmpty(responseObject[0].Result.Data.Json.Hash) ?
-                    $"https://chikoroko.b-cdn.net/toys/models/{responseObject[0].Result.Data.Json.ArchiveName}/scene." :
-                    $"https://chikoroko.b-cdn.net/toys/models/{responseObject[0].Result.Data.Json.ArchiveName}/{responseObject[0].Result.Data.Json.Hash}/scene.";
+                if (string.IsNullOrEmpty(responseObject[0].Result.Data.Json.Hash))
+                {
+                    result.Add(ModelUrlType.usdz, $"https://chikoroko.b-cdn.net/toys/models/{responseObject[0].Result.Data.Json.ArchiveName}/scene.usdz");
+                    result.Add(ModelUrlType.glb, $"https://chikoroko.b-cdn.net/toys/models/{responseObject[0].Result.Data.Json.ArchiveName}/scene.glb");
+                }
+                else
+                {
+                    result.Add(ModelUrlType.usdz, $"https://chikoroko.b-cdn.net/toys/models/{responseObject[0].Result.Data.Json.ArchiveName}/{responseObject[0].Result.Data.Json.Hash}/scene.usdz");
+                    result.Add(ModelUrlType.glb, $"https://chikoroko.b-cdn.net/toys/models/{responseObject[0].Result.Data.Json.ArchiveName}/{responseObject[0].Result.Data.Json.Hash}/scene.glb");
+                }
+
+                return result;
             }
             catch(Exception ex)
             {
