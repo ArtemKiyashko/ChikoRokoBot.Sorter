@@ -50,7 +50,7 @@ namespace ChikoRokoBot.Sorter.Clients
             catch(Exception ex)
             {
                 _logger.LogError($"Cannot get toy model link", ex);
-                return default;
+                return result;
             }
         }
     }
