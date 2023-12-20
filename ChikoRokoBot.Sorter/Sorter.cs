@@ -22,14 +22,15 @@ namespace ChikoRokoBot.Sorter
         private readonly IMapper _mapper;
         private readonly ChikoRokoClient _chikoRokoClient;
         private const string PARTITION_NAME = "primary";
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
         public Sorter(
             QueueClient queueClient,
             TableServiceClient tableServiceClient,
             IMapper mapper,
             IOptions<SorterOptions> options,
-            ChikoRokoClient chikoRokoClient)
+            ChikoRokoClient chikoRokoClient,
+            ILogger<Sorter> logger)
         {
             _queueClient = queueClient;
             _dropTable = tableServiceClient.GetTableClient(options.Value.DropsTableName);
@@ -38,12 +39,12 @@ namespace ChikoRokoBot.Sorter
             _userTable.CreateIfNotExists();
             _mapper = mapper;
             _chikoRokoClient = chikoRokoClient;
+            _logger = logger;
         }
 
         [FunctionName("Sorter")]
-        public async Task Run([QueueTrigger("alldrops", Connection = "AzureWebJobsStorage")]Root myQueueItem, ILogger log)
+        public async Task Run([QueueTrigger("alldrops", Connection = "AzureWebJobsStorage")]Root myQueueItem)
         {
-            _logger = log;
             var incomingDrops = myQueueItem?.Props?.PageProps?.Drops;
             if (incomingDrops is null) return;
 

@@ -8,10 +8,11 @@
             },
             "snapshotConfiguration": {
                 "isEnabled": true
-            },
-            "logLevel": {
-                "ChikoRokoBot.Sorter.Clients.ChikoRokoClient": "Information"
             }
+        },
+        "logLevel": {
+            "ChikoRokoBot.Sorter.Clients.ChikoRokoClient": "Information",
+            "ChikoRokoBot.Sorter.Sorter": "Information"
         }
     }
 }
