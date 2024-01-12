@@ -46,7 +46,7 @@ namespace ChikoRokoBot.Sorter
         [FunctionName("Sorter")]
         public async Task Run([QueueTrigger("alldrops", Connection = "AzureWebJobsStorage")]Root myQueueItem)
         {
-            var incomingDrops = myQueueItem?.Props?.PageProps?.Drops?.Items;
+            var incomingDrops = myQueueItem?.Props?.PageProps?.InitialDrops?.Items;
             if (incomingDrops is null) return;
 
             var users = _userTable.QueryAsync<UserTableEntity>(u => u.PartitionKey == PARTITION_NAME);

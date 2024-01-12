@@ -13,7 +13,7 @@ namespace ChikoRokoBot.Sorter.Models
         [property: JsonPropertyName("artists")] IReadOnlyList<Artist> Artists,
         [property: JsonPropertyName("socials")] IReadOnlyList<Social> Socials,
         [property: JsonPropertyName("media")] IReadOnlyList<Social> Media,
-        [property: JsonPropertyName("drops")] Drop Drops,
+        [property: JsonPropertyName("initialDrops")] Drop InitialDrops,
         [property: JsonPropertyName("banner")] Banner Banner
     );
 }
