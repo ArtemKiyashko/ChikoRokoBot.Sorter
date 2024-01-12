@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace ChikoRokoBot.Sorter.Models
 {
     public record Toy(
-        [property: JsonPropertyName("id")] int? Id,
+        [property: JsonPropertyName("id")] int Id,
         [property: JsonPropertyName("name")] string Name,
         [property: JsonPropertyName("countrycode")] string Countrycode,
         [property: JsonPropertyName("publishdate")] DateTime Publishdate,

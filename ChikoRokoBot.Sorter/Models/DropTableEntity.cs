@@ -23,6 +23,7 @@ namespace ChikoRokoBot.Sorter.Models
         public string DropJson { get; set; }
         public string ModelUrlUsdz { get; set; }
         public string ModelUrlGlb { get; set; }
+        public string AlternativeCollect { get; set; }
     }
 }
 

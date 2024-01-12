@@ -2,11 +2,11 @@
 
 namespace ChikoRokoBot.Sorter.Models
 {
-    public record RequestValue(
-        [property: JsonPropertyName("json")] RequestParameter Parameter
+    public record RequestValueToy(
+        [property: JsonPropertyName("json")] RequestParameterToyId Parameter
     );
 
-    public record RequestParameter(
+    public record RequestParameterToyId(
         [property: JsonPropertyName("toyId")] int ToyId
     );
 }

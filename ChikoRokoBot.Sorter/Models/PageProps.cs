@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace ChikoRokoBot.Sorter.Models
@@ -14,7 +13,7 @@ namespace ChikoRokoBot.Sorter.Models
         [property: JsonPropertyName("artists")] IReadOnlyList<Artist> Artists,
         [property: JsonPropertyName("socials")] IReadOnlyList<Social> Socials,
         [property: JsonPropertyName("media")] IReadOnlyList<Social> Media,
-        [property: JsonPropertyName("drops")] IReadOnlyList<Drop> Drops,
+        [property: JsonPropertyName("drops")] Drop Drops,
         [property: JsonPropertyName("banner")] Banner Banner
     );
 }
