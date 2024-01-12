@@ -12,7 +12,8 @@
         },
         "logLevel": {
             "ChikoRokoBot.Sorter.Clients.ChikoRokoClient": "Information",
-            "ChikoRokoBot.Sorter.Sorter": "Information"
+            "ChikoRokoBot.Sorter.Sorter": "Information",
+            "ChikoRokoBot.Sorter.Services.DescriptionService": "Information"
         }
     }
 }

@@ -3,12 +3,15 @@ using System.Net.Http;
 using Azure.Identity;
 using Azure.Storage.Queues;
 using ChikoRokoBot.Sorter.Clients;
+using ChikoRokoBot.Sorter.Interfaces;
 using ChikoRokoBot.Sorter.Mappers;
 using ChikoRokoBot.Sorter.Options;
+using ChikoRokoBot.Sorter.Services;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ReverseMarkdown;
 
 [assembly: FunctionsStartup(typeof(ChikoRokoBot.Sorter.Startup))]
 namespace ChikoRokoBot.Sorter
@@ -43,7 +46,8 @@ namespace ChikoRokoBot.Sorter
             });
 
             builder.Services.AddAutoMapper(typeof(PrimaryMapperProfile));
-
+            builder.Services.AddSingleton<Converter>(new Converter());
+            builder.Services.AddScoped<IDescriptionService, DescriptionService>();
 
 
             builder.Services

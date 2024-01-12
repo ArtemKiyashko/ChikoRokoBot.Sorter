@@ -6,6 +6,7 @@ using Azure;
 using Azure.Data.Tables;
 using Azure.Storage.Queues;
 using ChikoRokoBot.Sorter.Clients;
+using ChikoRokoBot.Sorter.Interfaces;
 using ChikoRokoBot.Sorter.Models;
 using ChikoRokoBot.Sorter.Options;
 using Microsoft.Azure.WebJobs;
@@ -23,6 +24,7 @@ namespace ChikoRokoBot.Sorter
         private readonly ChikoRokoClient _chikoRokoClient;
         private const string PARTITION_NAME = "primary";
         private readonly ILogger _logger;
+        private readonly IDescriptionService _descriptionService;
 
         public Sorter(
             QueueClient queueClient,
@@ -30,7 +32,8 @@ namespace ChikoRokoBot.Sorter
             IMapper mapper,
             IOptions<SorterOptions> options,
             ChikoRokoClient chikoRokoClient,
-            ILogger<Sorter> logger)
+            ILogger<Sorter> logger,
+            IDescriptionService descriptionService)
         {
             _queueClient = queueClient;
             _dropTable = tableServiceClient.GetTableClient(options.Value.DropsTableName);
@@ -40,6 +43,7 @@ namespace ChikoRokoBot.Sorter
             _mapper = mapper;
             _chikoRokoClient = chikoRokoClient;
             _logger = logger;
+            _descriptionService = descriptionService;
         }
 
         [FunctionName("Sorter")]
@@ -54,6 +58,8 @@ namespace ChikoRokoBot.Sorter
             {
                 var tableEntityResponse = await _dropTable.GetEntityIfExistsAsync<DropTableEntity>(PARTITION_NAME, drop.Id?.ToString());
                 if (tableEntityResponse.HasValue) continue;
+
+                drop.MarkdownDescription = _descriptionService.GetMarkdownDescription(drop.Description);
 
                 var tableEntity = await CreateTableEntity(drop);
 
