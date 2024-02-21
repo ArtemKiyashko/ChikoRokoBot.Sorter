@@ -68,6 +68,9 @@ namespace ChikoRokoBot.Sorter.Clients
             try
             {
                 var response = await _httpClient.GetStringAsync($"api/v2/{Ids.Select(id => "ToyManager.getSingle").Aggregate((f, s) => f + "," + s)}?batch=1&input={json}");
+
+                _logger.LogInformation($"GetToys response: {response}");
+
                 var responseObject = JsonSerializer.Deserialize<List<GetResponse<Toy>>>(response);
 
                 return responseObject.Select(toy => toy.Result.Data.Json).ToList();
