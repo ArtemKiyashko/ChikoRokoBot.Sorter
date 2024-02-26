@@ -14,5 +14,10 @@
             "ChikoRokoBot.Sorter.Clients.ChikoRokoClient": "Information",
             "ChikoRokoBot.Sorter.Sorter": "Information"
         }
+    },
+    "extensions": {
+        "queues": {
+            "visibilityTimeout": "00:00:05"
+        }
     }
 }
