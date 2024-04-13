@@ -61,10 +61,11 @@ namespace ChikoRokoBot.Sorter
                 var tableEntityResponse = await _dropTable.GetEntityIfExistsAsync<DropTableEntity>(PARTITION_NAME, dropItem.Id.ToString());
                 if (tableEntityResponse.HasValue) continue;
 
-
                 if (dropItem.Toyid.HasValue)
                 {
-                    dropItem.Toy = toys.FirstOrDefault(toy => toy.Id == dropItem.Toyid);
+                    dropItem.Toy = toys.FirstOrDefault(toy => toy is not null && toy.Id == dropItem.Toyid);
+
+                    if (dropItem.Toy is null) continue;
 
                     var modelUrls = await _chikoRokoClient.GetModelUrls(dropItem.Toyid.Value);
                     dropItem.Toy.ModelUrlUsdz = modelUrls.ContainsKey(ModelUrlType.usdz) ? modelUrls[ModelUrlType.usdz] : default;
